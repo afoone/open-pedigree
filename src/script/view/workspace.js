@@ -11,60 +11,60 @@ import Raphael from 'pedigree/raphael';
 
 var Workspace = Class.create({
 
-  initialize: function() {
+  initialize: function () {
     var me = this;
-    this.canvas = new Element('div', {'id' : 'canvas'});
-    this.workArea = new Element('div', {'id' : 'work-area'}).update(this.canvas);
+    this.canvas = new Element('div', { 'id': 'canvas' });
+    this.workArea = new Element('div', { 'id': 'work-area' }).update(this.canvas);
     $('body').update(this.workArea);
     var screenDimensions = document.viewport.getDimensions();
     this.generateTopMenu();
     this.width = screenDimensions.width;
     this.height = screenDimensions.height - this.canvas.cumulativeOffset().top - 4;
-    this._paper = Raphael('canvas',this.width, this.height);
+    this._paper = Raphael('canvas', this.width, this.height);
     this.viewBoxX = 0;
     this.viewBoxY = 0;
     this.zoomCoefficient = 1;
 
-    this.background = this.getPaper().rect(0,0, this.width, this.height).attr({fill: 'blue', stroke: 'none', opacity: 0}).toBack();
+    this.background = this.getPaper().rect(0, 0, this.width, this.height).attr({ fill: 'blue', stroke: 'none', opacity: 0 }).toBack();
     this.background.node.setAttribute('class', 'panning-background');
 
-    this.workArea.insert(new Element('div', {'id': 'attribution'})
+    this.workArea.insert(new Element('div', { 'id': 'attribution' })
       .insert('&copy; 2019 ')
-      .insert(new Element('a', {'href': 'https://gene42.com'}).update('Gene42 Inc.')));
+      .insert(new Element('a', { 'href': 'https://gene42.com' }).update('Gene42 Inc.')));
 
     this.adjustSizeToScreen = this.adjustSizeToScreen.bind(this);
-    Event.observe (window, 'resize', me.adjustSizeToScreen);
+    Event.observe(window, 'resize', me.adjustSizeToScreen);
     this.generateViewControls();
 
     //Initialize pan by dragging
-    var start = function() {
+    var start = function () {
       if (editor.isAnyMenuVisible()) {
         return;
       }
       me.background.ox = me.background.attr('x');
       me.background.oy = me.background.attr('y');
       //me.background.attr({cursor: 'url(https://mail.google.com/mail/images/2/closedhand.cur)'});
-      me.background.attr({cursor: 'move'});
+      me.background.attr({ cursor: 'move' });
     };
-    var move = function(dx, dy) {
-      var deltax = me.viewBoxX - dx/me.zoomCoefficient;
-      var deltay = me.viewBoxY - dy/me.zoomCoefficient;
+    var move = function (dx, dy) {
+      var deltax = me.viewBoxX - dx / me.zoomCoefficient;
+      var deltay = me.viewBoxY - dy / me.zoomCoefficient;
 
-      me.getPaper().setViewBox(deltax, deltay, me.width/me.zoomCoefficient, me.height/me.zoomCoefficient);
+      me.getPaper().setViewBox(deltax, deltay, me.width / me.zoomCoefficient, me.height / me.zoomCoefficient);
       me.background.ox = deltax;
       me.background.oy = deltay;
-      me.background.attr({x: deltax, y: deltay });
+      me.background.attr({ x: deltax, y: deltay });
     };
-    var end = function() {
+    var end = function () {
       me.viewBoxX = me.background.ox;
       me.viewBoxY = me.background.oy;
-      me.background.attr({cursor: 'default'});
+      me.background.attr({ cursor: 'default' });
     };
     me.background.drag(move, start, end);
 
     if (document.addEventListener) {
       // adapted from from raphaelZPD
-      me.handleMouseWheel = function(evt) {
+      me.handleMouseWheel = function (evt) {
         if (evt.preventDefault) {
           evt.preventDefault();
         } else {
@@ -106,7 +106,7 @@ var Workspace = Class.create({
      * @method getPaper
      * @return {Object} Raphael Paper element
      */
-  getPaper: function() {
+  getPaper: function () {
     return this._paper;
   },
 
@@ -116,7 +116,7 @@ var Workspace = Class.create({
      * @method getWorkArea
      * @return {HTMLElement}
      */
-  getWorkArea: function() {
+  getWorkArea: function () {
     return this.workArea;
   },
 
@@ -126,7 +126,7 @@ var Workspace = Class.create({
      * @method getWidth
      * @return {Number}
      */
-  getWidth: function() {
+  getWidth: function () {
     return this.width;
   },
 
@@ -136,7 +136,7 @@ var Workspace = Class.create({
      * @method getHeight
      * @return {Number}
      */
-  getHeight: function() {
+  getHeight: function () {
     return this.height;
   },
 
@@ -145,65 +145,65 @@ var Workspace = Class.create({
      *
      * @method generateTopMenu
      */
-  generateTopMenu: function() {
-    var menu = new Element('div', {'id' : 'editor-menu'});
+  generateTopMenu: function () {
+    var menu = new Element('div', { 'id': 'editor-menu' });
 
-    menu.insert(new Element('a', {'class': 'title', 'href': 'https://github.com/phenotips/open-pedigree'})
-        .update('Open Pedigree'));
+    menu.insert(new Element('a', { 'class': 'title', 'href': 'https://github.com/phenotips/open-pedigree' })
+      .update('Open Pedigree'));
 
-    this.getWorkArea().insert({before : menu});
+    this.getWorkArea().insert({ before: menu });
     var submenus = [];
 
     if (editor.isUnsupportedBrowser()) {
       submenus = [{
-        name : 'input',
+        name: 'input',
         items: [
-          { key : 'readonlymessage', label : 'Unsuported browser mode', icon : 'exclamation-triangle'}
+          { key: 'readonlymessage', label: 'Unsuported browser mode', icon: 'exclamation-triangle' }
         ]
       }, {
-        name : 'output',
+        name: 'output',
         items: [
-          { key : 'export',    label : 'Export', icon : 'file-export'},
-          { key : 'close',     label : 'Close', icon : 'times'}
+          { key: 'export', label: 'Export', icon: 'file-export' },
+          { key: 'close', label: 'Close', icon: 'times' }
         ]
       }];
     } else {
       submenus = [{
-        name : 'input',
+        name: 'input',
         items: [
-          { key : 'templates', label : 'Templates', icon : 'copy'},
-          { key : 'import',    label : 'Import', icon : 'file-import'}
+          { key: 'templates', label: 'Templates', icon: 'copy' },
+          { key: 'import', label: 'Import', icon: 'file-import' }
         ]
       }, {
-        name : 'edit',
+        name: 'edit',
         items: [
-          { key : 'undo',   label : 'Undo', icon : 'undo'},
-          { key : 'redo',   label : 'Redo', icon : 'redo'}
+          { key: 'undo', label: 'Deshacer', icon: 'undo' },
+          { key: 'redo', label: 'Redo', icon: 'redo' }
         ]
       }, {
-        name : 'reset',
+        name: 'reset',
         items: [
-          { key : 'clear',  label : 'Clear all', icon : 'times-circle'}
+          { key: 'clear', label: 'Clear all', icon: 'times-circle' }
         ]
       }, {
-        name : 'output',
+        name: 'output',
         items: [
-          { key : 'export',    label : 'Export', icon : 'file-export'},
-          { key : 'close',     label : 'Close', icon : 'times'}
+          { key: 'export', label: 'Export', icon: 'file-export' },
+          { key: 'close', label: 'Close', icon: 'times' }
         ]
       }];
     }
-    var _createSubmenu = function(data) {
-      var submenu = new Element('div', {'class' : data.name + '-actions action-group'});
+    var _createSubmenu = function (data) {
+      var submenu = new Element('div', { 'class': data.name + '-actions action-group' });
       menu.insert(submenu);
       data.items.each(function (item) {
         submenu.insert(_createMenuItem(item));
       });
     };
-    var _createMenuItem = function(data) {
-      var mi = new Element('span', {'id' : 'action-' + data.key, 'class' : 'menu-item ' + data.key}).insert(new Element('span', {'class' : 'fa fa-' + data.icon})).insert(' ').insert(data.label);
-      if (data.callback && typeof(this[data.callback]) == 'function') {
-        mi.observe('click', function() {
+    var _createMenuItem = function (data) {
+      var mi = new Element('span', { 'id': 'action-' + data.key, 'class': 'menu-item ' + data.key }).insert(new Element('span', { 'class': 'fa fa-' + data.icon })).insert(' ').insert(data.label);
+      if (data.callback && typeof (this[data.callback]) == 'function') {
+        mi.observe('click', function () {
           this[data.callback]();
         });
       }
@@ -211,9 +211,9 @@ var Workspace = Class.create({
     };
     submenus.each(_createSubmenu);
 
-    menu.insert(new Element('div', {'class': 'powered-by'})
+    menu.insert(new Element('div', { 'class': 'powered-by' })
       .insert('Powered by ')
-      .insert(new Element('a', {'href': 'https://phenotips.org/'})
+      .insert(new Element('a', { 'href': 'https://phenotips.org/' })
         .update('PhenoTips')
         .insert(new Element('sup').update('&reg;'))));
   },
@@ -224,21 +224,21 @@ var Workspace = Class.create({
      * @method zoom
      * @param {Number} zoomCoefficient The zooming ratio
      */
-  zoom: function(zoomCoefficient) {
+  zoom: function (zoomCoefficient) {
     if (zoomCoefficient < 0.15) {
       zoomCoefficient = 0.15;
     }
     if (zoomCoefficient > 0.15 && zoomCoefficient < 0.25) {
       zoomCoefficient = 0.25;
     }
-    zoomCoefficient = Math.round(zoomCoefficient/0.05)/20;
-    var newWidth  = this.width/zoomCoefficient;
-    var newHeight = this.height/zoomCoefficient;
-    this.viewBoxX = this.viewBoxX + (this.width/this.zoomCoefficient - newWidth)/2;
-    this.viewBoxY = this.viewBoxY + (this.height/this.zoomCoefficient - newHeight)/2;
+    zoomCoefficient = Math.round(zoomCoefficient / 0.05) / 20;
+    var newWidth = this.width / zoomCoefficient;
+    var newHeight = this.height / zoomCoefficient;
+    this.viewBoxX = this.viewBoxX + (this.width / this.zoomCoefficient - newWidth) / 2;
+    this.viewBoxY = this.viewBoxY + (this.height / this.zoomCoefficient - newHeight) / 2;
     this.getPaper().setViewBox(this.viewBoxX, this.viewBoxY, newWidth, newHeight);
     this.zoomCoefficient = zoomCoefficient;
-    this.background.attr({x: this.viewBoxX, y: this.viewBoxY, width: newWidth, height: newHeight});
+    this.background.attr({ x: this.viewBoxX, y: this.viewBoxY, width: newWidth, height: newHeight });
   },
 
   /**
@@ -246,24 +246,24 @@ var Workspace = Class.create({
      *
      * @method generateViewControls
      */
-  generateViewControls : function() {
+  generateViewControls: function () {
     var _this = this;
-    this.__controls = new Element('div', {'class' : 'view-controls'});
+    this.__controls = new Element('div', { 'class': 'view-controls' });
     // Pan controls
-    this.__pan = new Element('div', {'class' : 'view-controls-pan', title : 'Pan'});
+    this.__pan = new Element('div', { 'class': 'view-controls-pan', title: 'Pan' });
     this.__controls.insert(this.__pan);
     ['up', 'right', 'down', 'left', 'home'].each(function (direction) {
       var faIconClass = (direction == 'home') ? 'fa-user' : 'fa-arrow-' + direction;
-      _this.__pan[direction] = new Element('span', {'class' : 'view-control-pan pan-' + direction + ' fa fa-fw ' + faIconClass, 'title' : 'Pan ' + direction});
+      _this.__pan[direction] = new Element('span', { 'class': 'view-control-pan pan-' + direction + ' fa fa-fw ' + faIconClass, 'title': 'Pan ' + direction });
       _this.__pan.insert(_this.__pan[direction]);
-      _this.__pan[direction].observe('click', function(event) {
+      _this.__pan[direction].observe('click', function (event) {
         if (direction == 'home') {
           _this.centerAroundNode(0);
-        } else if(direction == 'up') {
+        } else if (direction == 'up') {
           _this.panTo(_this.viewBoxX, _this.viewBoxY - 300);
-        } else if(direction == 'down') {
+        } else if (direction == 'down') {
           _this.panTo(_this.viewBoxX, _this.viewBoxY + 300);
-        } else if(direction == 'left') {
+        } else if (direction == 'left') {
           _this.panTo(_this.viewBoxX - 300, _this.viewBoxY);
         } else {
           _this.panTo(_this.viewBoxX + 300, _this.viewBoxY);
@@ -272,13 +272,13 @@ var Workspace = Class.create({
     });
     // Zoom controls
     var trackLength = 200;
-    this.__zoom = new Element('div', {'class' : 'view-controls-zoom', title : 'Zoom'});
+    this.__zoom = new Element('div', { 'class': 'view-controls-zoom', title: 'Zoom' });
     this.__controls.insert(this.__zoom);
-    this.__zoom.track  = new Element('div', {'class' : 'zoom-track'});
-    this.__zoom.handle = new Element('div', {'class' : 'zoom-handle', title : 'Drag to zoom'});
-    this.__zoom['in']  = new Element('div', {'class' : 'zoom-button zoom-in fa fa-fw fa-search-plus', title : 'Zoom in'});
-    this.__zoom['out'] = new Element('div', {'class' : 'zoom-button zoom-out fa fa-fw fa-search-minus', title : 'Zoom out'});
-    this.__zoom.label  = new Element('div', {'class' : 'zoom-crt-value'});
+    this.__zoom.track = new Element('div', { 'class': 'zoom-track' });
+    this.__zoom.handle = new Element('div', { 'class': 'zoom-handle', title: 'Drag to zoom' });
+    this.__zoom['in'] = new Element('div', { 'class': 'zoom-button zoom-in fa fa-fw fa-search-plus', title: 'Zoom in' });
+    this.__zoom['out'] = new Element('div', { 'class': 'zoom-button zoom-out fa fa-fw fa-search-minus', title: 'Zoom out' });
+    this.__zoom.label = new Element('div', { 'class': 'zoom-crt-value' });
     this.__zoom.insert(this.__zoom['in']);
     this.__zoom.insert(this.__zoom.track);
     this.__zoom.track.insert(this.__zoom.handle);
@@ -292,25 +292,25 @@ var Workspace = Class.create({
     // zoom coefficients from 1.25x to 0.25x, and zoom positions from (0.9 to 1]
     // correspond to single deepest zoom level 0.15x
     this.zoomSlider = new Control.Slider(this.__zoom.handle, this.__zoom.track, {
-      axis:'vertical',
+      axis: 'vertical',
       minimum: 0,
       maximum: trackLength,
-      increment : 1,
+      increment: 1,
       alignY: 6,
-      onSlide : function (value) {
+      onSlide: function (value) {
         // Called whenever the Slider is moved by dragging.
         // The called function gets the slider value (or array if slider has multiple handles) as its parameter.
         if (value <= 0.9) {
-          _this.zoom(-value/0.9 + 1.25);
+          _this.zoom(-value / 0.9 + 1.25);
         } else {
           _this.zoom(0.15);
         }
       },
-      onChange : function (value) {
+      onChange: function (value) {
         // Called whenever the Slider has finished moving or has had its value changed via the setSlider Value function.
         // The called function gets the slider value (or array if slider has multiple handles) as its parameter.
         if (value <= 0.9) {
-          _this.zoom(-value/0.9 + 1.25);
+          _this.zoom(-value / 0.9 + 1.25);
         } else {
           _this.zoom(0.15);
         }
@@ -322,20 +322,20 @@ var Workspace = Class.create({
     } else {
       this.zoomSlider.setValue(0.5 * 0.9);  // 0.5 * 0.9 corresponds to zoomCoefficient of 0.75x
     }
-    this.__zoom['in'].observe('click', function(event) {
+    this.__zoom['in'].observe('click', function (event) {
       if (_this.zoomCoefficient < 0.25) {
         _this.zoomSlider.setValue(0.9);
       }   // zoom in from the any value below 0.25x goes to 0.25x (which is 0.9 on the slider)
       else {
-        _this.zoomSlider.setValue(-(_this.zoomCoefficient - 1)*0.9);
+        _this.zoomSlider.setValue(-(_this.zoomCoefficient - 1) * 0.9);
       }     // +0.25x
     });
-    this.__zoom['out'].observe('click', function(event) {
+    this.__zoom['out'].observe('click', function (event) {
       if (_this.zoomCoefficient <= 0.25) {
         _this.zoomSlider.setValue(1);
       }     // zoom out from 0.25x goes to the final slider position
       else {
-        _this.zoomSlider.setValue(-(_this.zoomCoefficient - 1.5)*0.9);
+        _this.zoomSlider.setValue(-(_this.zoomCoefficient - 1.5) * 0.9);
       }   // -0.25x
     });
     // Insert all controls in the document
@@ -348,14 +348,14 @@ var Workspace = Class.create({
      *
      * Returns the pixel value to be used in stoke-width
      */
-  getSizeNormalizedToDefaultZoom: function(pixelSizeAtDefaultZoom) {
+  getSizeNormalizedToDefaultZoom: function (pixelSizeAtDefaultZoom) {
     return pixelSizeAtDefaultZoom;
   },
 
   /**
      * Returns the current zoom level (not normalized to any value, larger numbers mean deeper zoom-in)
      */
-  getCurrentZoomLevel: function(pixelSizeAtDefaultZoom) {
+  getCurrentZoomLevel: function (pixelSizeAtDefaultZoom) {
     return this.zoomCoefficient;
   },
 
@@ -368,7 +368,7 @@ var Workspace = Class.create({
      * @param {Number} canvasY The y coordinate relative to the Raphael canvas (ie with pan/zoom transformations)
      * @return {{x: number, y: number}} Object with coordinates
      */
-  canvasToDiv: function(canvasX,canvasY) {
+  canvasToDiv: function (canvasX, canvasY) {
     return {
       x: this.zoomCoefficient * (canvasX - this.viewBoxX),
       y: this.zoomCoefficient * (canvasY - this.viewBoxY)
@@ -384,10 +384,10 @@ var Workspace = Class.create({
      * @param {Number} divY The y coordinate relative to the canvas
      * @return {{x: number, y: number}} Object with coordinates
      */
-  divToCanvas: function(divX,divY) {
+  divToCanvas: function (divX, divY) {
     return {
-      x: divX/this.zoomCoefficient + this.viewBoxX,
-      y: divY/this.zoomCoefficient + this.viewBoxY
+      x: divX / this.zoomCoefficient + this.viewBoxX,
+      y: divY / this.zoomCoefficient + this.viewBoxY
     };
   },
 
@@ -400,10 +400,10 @@ var Workspace = Class.create({
      * @param {Number} absY The y coordinate relative to the viewport
      * @return {{x: number, y: number}} Object with coordinates
      */
-  viewportToDiv : function (absX, absY) {
+  viewportToDiv: function (absX, absY) {
     return {
-      x : + absX - this.canvas.cumulativeOffset().left,
-      y : absY - this.canvas.cumulativeOffset().top
+      x: + absX - this.canvas.cumulativeOffset().left,
+      y: absY - this.canvas.cumulativeOffset().top
     };
   },
 
@@ -414,7 +414,7 @@ var Workspace = Class.create({
      * @param {Number} x The x coordinate relative to the Raphael canvas
      * @param {Number} y The y coordinate relative to the Raphael canvas
      */
-  panTo: function(x, y, instant) {
+  panTo: function (x, y, instant) {
     var me = this,
       oX = this.viewBoxX,
       oY = this.viewBoxY,
@@ -426,10 +426,10 @@ var Workspace = Class.create({
     }
 
     var numSeconds = instant ? 0 : .4;
-    var frames     = instant ? 1 : 11;
+    var frames = instant ? 1 : 11;
 
-    var xStep = xDisplacement/frames,
-      yStep = yDisplacement/frames;
+    var xStep = xDisplacement / frames,
+      yStep = yDisplacement / frames;
 
     if (xStep == 0 && yStep == 0) {
       return;
@@ -438,12 +438,12 @@ var Workspace = Class.create({
     var progress = 0;
 
     (function draw() {
-      setTimeout(function() {
-        if(progress++ < frames) {
+      setTimeout(function () {
+        if (progress++ < frames) {
           me.viewBoxX += xStep;
           me.viewBoxY += yStep;
-          me.getPaper().setViewBox(me.viewBoxX, me.viewBoxY, me.width/me.zoomCoefficient, me.height/me.zoomCoefficient);
-          me.background.attr({x: me.viewBoxX, y: me.viewBoxY });
+          me.getPaper().setViewBox(me.viewBoxX, me.viewBoxY, me.width / me.zoomCoefficient, me.height / me.zoomCoefficient);
+          me.background.attr({ x: me.viewBoxX, y: me.viewBoxY });
           draw();
         }
       }, 1000 * numSeconds / frames);
@@ -456,8 +456,8 @@ var Workspace = Class.create({
      * @method panTo
      * @param {Number} deltaX The move size
      */
-  panByX: function(deltaX, instant) {
-    this.panTo(this.viewBoxX + Math.floor(deltaX/this.zoomCoefficient), this.viewBoxY, instant);
+  panByX: function (deltaX, instant) {
+    this.panTo(this.viewBoxX + Math.floor(deltaX / this.zoomCoefficient), this.viewBoxY, instant);
   },
 
   /**
@@ -465,13 +465,13 @@ var Workspace = Class.create({
      *
      * @method adjustSizeToScreen
      */
-  adjustSizeToScreen : function() {
+  adjustSizeToScreen: function () {
     var screenDimensions = document.viewport.getDimensions();
     this.width = screenDimensions.width;
     this.height = screenDimensions.height - this.canvas.cumulativeOffset().top - 4;
     this.getPaper().setSize(this.width, this.height);
-    this.getPaper().setViewBox(this.viewBoxX, this.viewBoxY, this.width/this.zoomCoefficient, this.height/this.zoomCoefficient);
-    this.background && this.background.attr({'width': this.width, 'height': this.height});
+    this.getPaper().setViewBox(this.viewBoxX, this.viewBoxY, this.width / this.zoomCoefficient, this.height / this.zoomCoefficient);
+    this.background && this.background.attr({ 'width': this.width, 'height': this.height });
     if (editor.getNodeMenu()) {
       editor.getNodeMenu().reposition();
     }
@@ -486,9 +486,9 @@ var Workspace = Class.create({
      * @method centerAroundNode
      * @param {Number} nodeID The id of the node
      */
-  centerAroundNode: function(nodeID, instant, xCenterShift, yCenterShift) {
+  centerAroundNode: function (nodeID, instant, xCenterShift, yCenterShift) {
     var node = editor.getNode(nodeID);
-    if(node) {
+    if (node) {
       var x = node.getX(),
         y = node.getY();
       if (!xCenterShift) {
@@ -497,9 +497,9 @@ var Workspace = Class.create({
       if (!yCenterShift) {
         yCenterShift = 0;
       }
-      var xOffset = this.getWidth()/this.zoomCoefficient;
-      var yOffset = this.getHeight()/this.zoomCoefficient;
-      this.panTo(x - xOffset/2 - xCenterShift, y - yOffset/2 - yCenterShift, instant);
+      var xOffset = this.getWidth() / this.zoomCoefficient;
+      var yOffset = this.getHeight() / this.zoomCoefficient;
+      this.panTo(x - xOffset / 2 - xCenterShift, y - yOffset / 2 - yCenterShift, instant);
     }
   }
 });

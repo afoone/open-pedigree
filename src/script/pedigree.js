@@ -28,7 +28,7 @@ import '../style/editor.css';
  */
 
 var PedigreeEditor = Class.create({
-  initialize: function(options) {
+  initialize: function (options) {
     options = options || {};
 
     // URL to load patient data from and save data to
@@ -48,7 +48,7 @@ var PedigreeEditor = Class.create({
     this._nodeGroupMenu = this.generateNodeGroupMenu();
     this._partnershipMenu = this.generatePartnershipMenu();
     this._nodetypeSelectionBubble = new NodetypeSelectionBubble(false);
-    this._siblingSelectionBubble  = new NodetypeSelectionBubble(true);
+    this._siblingSelectionBubble = new NodetypeSelectionBubble(true);
     this._disorderLegend = new DisorderLegend();
     this._geneLegend = new GeneLegend();
     this._hpoLegend = new HPOLegend();
@@ -69,21 +69,21 @@ var PedigreeEditor = Class.create({
 
     //attach actions to buttons on the top bar
     var undoButton = $('action-undo');
-    undoButton && undoButton.on('click', function(event) {
+    undoButton && undoButton.on('click', function (event) {
       document.fire('pedigree:undo');
     });
     var redoButton = $('action-redo');
-    redoButton && redoButton.on('click', function(event) {
+    redoButton && redoButton.on('click', function (event) {
       document.fire('pedigree:redo');
     });
 
     var clearButton = $('action-clear');
-    clearButton && clearButton.on('click', function(event) {
+    clearButton && clearButton.on('click', function (event) {
       document.fire('pedigree:graph:clear');
     });
 
     var saveButton = $('action-save');
-    saveButton && saveButton.on('click', function(event) {
+    saveButton && saveButton.on('click', function (event) {
       editor.getView().unmarkAll();
       if (patientDataUrl) {
         editor.getSaveLoadEngine().save(patientDataUrl);
@@ -91,31 +91,31 @@ var PedigreeEditor = Class.create({
     });
 
     var templatesButton = $('action-templates');
-    templatesButton && templatesButton.on('click', function(event) {
+    templatesButton && templatesButton.on('click', function (event) {
       editor.getTemplateSelector().show();
     });
     var importButton = $('action-import');
-    importButton && importButton.on('click', function(event) {
+    importButton && importButton.on('click', function (event) {
       editor.getImportSelector().show();
     });
     var exportButton = $('action-export');
-    exportButton && exportButton.on('click', function(event) {
+    exportButton && exportButton.on('click', function (event) {
       editor.getExportSelector().show();
     });
 
     var closeButton = $('action-close');
-    closeButton && closeButton.on('click', function(event) {
+    closeButton && closeButton.on('click', function (event) {
       if (returnUrl) {
         window.location = returnUrl;
       }
     });
 
     var unsupportedBrowserButton = $('action-readonlymessage');
-    unsupportedBrowserButton && unsupportedBrowserButton.on('click', function(event) {
+    unsupportedBrowserButton && unsupportedBrowserButton.on('click', function (event) {
       alert('Your browser does not support all the features required for ' +
-                  'Pedigree Editor, so pedigree is displayed in read-only mode (and may have quirks).\n\n' +
-                  'Supported browsers include Firefox v3.5+, Internet Explorer v9+, ' +
-                  'Chrome, Safari v4+, Opera v10.5+ and most mobile browsers.');
+        'Pedigree Editor, so pedigree is displayed in read-only mode (and may have quirks).\n\n' +
+        'Supported browsers include Firefox v3.5+, Internet Explorer v9+, ' +
+        'Chrome, Safari v4+, Opera v10.5+ and most mobile browsers.');
     });
 
   },
@@ -126,7 +126,7 @@ var PedigreeEditor = Class.create({
      * @param {Number} nodeID The id of the desired node
      * @return {AbstractNode} the node whose id is nodeID
      */
-  getNode: function(nodeID) {
+  getNode: function (nodeID) {
     return this.getView().getNode(nodeID);
   },
 
@@ -134,7 +134,7 @@ var PedigreeEditor = Class.create({
      * @method getView
      * @return {View} (responsible for managing graphical representations of nodes and interactive elements)
      */
-  getView: function() {
+  getView: function () {
     return this._view;
   },
 
@@ -142,7 +142,7 @@ var PedigreeEditor = Class.create({
      * @method getVersionUpdater
      * @return {VersionUpdater}
      */
-  getVersionUpdater: function() {
+  getVersionUpdater: function () {
     return this._versionUpdater;
   },
 
@@ -150,7 +150,7 @@ var PedigreeEditor = Class.create({
      * @method getGraph
      * @return {DynamicPositionedGraph} (data model: responsible for managing nodes and their positions)
      */
-  getGraph: function() {
+  getGraph: function () {
     return this._graphModel;
   },
 
@@ -158,7 +158,7 @@ var PedigreeEditor = Class.create({
      * @method getController
      * @return {Controller} (responsible for managing user input and corresponding data changes)
      */
-  getController: function() {
+  getController: function () {
     return this._controller;
   },
 
@@ -166,7 +166,7 @@ var PedigreeEditor = Class.create({
      * @method getActionStack
      * @return {ActionStack} (responsible for undoing and redoing actions)
      */
-  getActionStack: function() {
+  getActionStack: function () {
     return this._actionStack;
   },
 
@@ -174,7 +174,7 @@ var PedigreeEditor = Class.create({
      * @method getNodetypeSelectionBubble
      * @return {NodetypeSelectionBubble} (floating window with initialization options for new nodes)
      */
-  getNodetypeSelectionBubble: function() {
+  getNodetypeSelectionBubble: function () {
     return this._nodetypeSelectionBubble;
   },
 
@@ -182,7 +182,7 @@ var PedigreeEditor = Class.create({
      * @method getSiblingSelectionBubble
      * @return {NodetypeSelectionBubble} (floating window with initialization options for new sibling nodes)
      */
-  getSiblingSelectionBubble: function() {
+  getSiblingSelectionBubble: function () {
     return this._siblingSelectionBubble;
   },
 
@@ -190,7 +190,7 @@ var PedigreeEditor = Class.create({
      * @method getWorkspace
      * @return {Workspace}
      */
-  getWorkspace: function() {
+  getWorkspace: function () {
     return this._workspace;
   },
 
@@ -198,7 +198,7 @@ var PedigreeEditor = Class.create({
      * @method getDisorderLegend
      * @return {Legend} Responsible for managing and displaying the disorder legend
      */
-  getDisorderLegend: function() {
+  getDisorderLegend: function () {
     return this._disorderLegend;
   },
 
@@ -206,7 +206,7 @@ var PedigreeEditor = Class.create({
      * @method getHPOLegend
      * @return {Legend} Responsible for managing and displaying the phenotype/HPO legend
      */
-  getHPOLegend: function() {
+  getHPOLegend: function () {
     return this._hpoLegend;
   },
 
@@ -214,7 +214,7 @@ var PedigreeEditor = Class.create({
      * @method getGeneLegend
      * @return {Legend} Responsible for managing and displaying the candidate genes legend
      */
-  getGeneLegend: function() {
+  getGeneLegend: function () {
     return this._geneLegend;
   },
 
@@ -222,7 +222,7 @@ var PedigreeEditor = Class.create({
      * @method getPaper
      * @return {Workspace.paper} Raphael paper element
      */
-  getPaper: function() {
+  getPaper: function () {
     return this.getWorkspace().getPaper();
   },
 
@@ -232,14 +232,14 @@ var PedigreeEditor = Class.create({
      *                   (read-only mode is used for IE8 as well as for template display and
      *                   print and export versions).
      */
-  isReadOnlyMode: function() {
+  isReadOnlyMode: function () {
     if (this.isUnsupportedBrowser()) {
       return true;
     }
     return false;
   },
 
-  isUnsupportedBrowser: function() {
+  isUnsupportedBrowser: function () {
     // http://voormedia.com/blog/2012/10/displaying-and-detecting-support-for-svg-images
     if (!document.implementation.hasFeature('http://www.w3.org/TR/SVG11/feature#BasicStructure', '1.1')) {
       // implies unpredictable behavior when using handles & interactive elements,
@@ -258,9 +258,9 @@ var PedigreeEditor = Class.create({
       //          should theoreticaly start working (FF 3.0, Safari 3 & Opera 9/10 - need to test).
       //          IE7 does not support SVG and JSON and is completely out of the running;
       alert('Your browser is not supported and is unable to load and display any pedigrees.\n\n' +
-                  'Suported browsers include Internet Explorer version 9 and higher, Safari version 4 and higher, '+
-                  'Firefox version 3.6 and higher, Opera version 10.5 and higher, any version of Chrome and most '+
-                  'other modern browsers (including mobile). IE8 is able to display pedigrees in read-only mode.');
+        'Suported browsers include Internet Explorer version 9 and higher, Safari version 4 and higher, ' +
+        'Firefox version 3.6 and higher, Opera version 10.5 and higher, any version of Chrome and most ' +
+        'other modern browsers (including mobile). IE8 is able to display pedigrees in read-only mode.');
       window.stop && window.stop();
       return true;
     }
@@ -271,7 +271,7 @@ var PedigreeEditor = Class.create({
      * @method getSaveLoadEngine
      * @return {SaveLoadEngine} Engine responsible for saving and loading operations
      */
-  getSaveLoadEngine: function() {
+  getSaveLoadEngine: function () {
     return this._saveLoadEngine;
   },
 
@@ -279,7 +279,7 @@ var PedigreeEditor = Class.create({
      * @method getTemplateSelector
      * @return {TemplateSelector}
      */
-  getTemplateSelector: function() {
+  getTemplateSelector: function () {
     return this._templateSelector;
   },
 
@@ -287,7 +287,7 @@ var PedigreeEditor = Class.create({
      * @method getImportSelector
      * @return {ImportSelector}
      */
-  getImportSelector: function() {
+  getImportSelector: function () {
     return this._importSelector;
   },
 
@@ -295,7 +295,7 @@ var PedigreeEditor = Class.create({
      * @method getExportSelector
      * @return {ExportSelector}
      */
-  getExportSelector: function() {
+  getExportSelector: function () {
     return this._exportSelector;
   },
 
@@ -305,7 +305,7 @@ var PedigreeEditor = Class.create({
      *
      * @method isAnyMenuVisible
      */
-  isAnyMenuVisible: function() {
+  isAnyMenuVisible: function () {
     if (this.getNodeMenu().isVisible() || this.getNodeGroupMenu().isVisible() || this.getPartnershipMenu().isVisible()) {
       return;
     }
@@ -317,180 +317,180 @@ var PedigreeEditor = Class.create({
      * @method generateNodeMenu
      * @return {NodeMenu}
      */
-  generateNodeMenu: function() {
+  generateNodeMenu: function () {
     if (this.isReadOnlyMode()) {
       return null;
     }
     var _this = this;
     return new NodeMenu([
       {
-        'name' : 'identifier',
-        'label' : '',
-        'type'  : 'hidden',
+        'name': 'identifier',
+        'label': '',
+        'type': 'hidden',
         'tab': 'Personal'
       },
       {
-        'name' : 'gender',
-        'label' : 'Gender',
-        'type' : 'radio',
+        'name': 'gender',
+        'label': 'Gender',
+        'type': 'radio',
         'tab': 'Personal',
         'columns': 3,
-        'values' : [
-          { 'actual' : 'M', 'displayed' : 'Male' },
-          { 'actual' : 'F', 'displayed' : 'Female' },
-          { 'actual' : 'U', 'displayed' : 'Unknown' }
+        'values': [
+          { 'actual': 'M', 'displayed': 'Male' },
+          { 'actual': 'F', 'displayed': 'Female' },
+          { 'actual': 'U', 'displayed': 'Unknown' }
         ],
-        'default' : 'U',
-        'function' : 'setGender'
+        'default': 'U',
+        'function': 'setGender'
       },
       {
-        'name' : 'first_name',
+        'name': 'first_name',
         'label': 'First name',
-        'type' : 'text',
+        'type': 'text',
         'tab': 'Personal',
-        'function' : 'setFirstName'
+        'function': 'setFirstName'
       },
       {
-        'name' : 'last_name',
+        'name': 'last_name',
         'label': 'Last name',
-        'type' : 'text',
+        'type': 'text',
         'tab': 'Personal',
-        'function' : 'setLastName'
+        'function': 'setLastName'
       },
       {
-        'name' : 'external_id',
+        'name': 'external_id',
         'label': 'Identifier',
-        'type' : 'text',
+        'type': 'text',
         'tab': 'Personal',
-        'function' : 'setExternalID'
+        'function': 'setExternalID'
       },
       {
-        'name' : 'carrier',
-        'label' : 'Carrier status',
-        'type' : 'radio',
+        'name': 'carrier',
+        'label': 'Carrier status',
+        'type': 'radio',
         'tab': 'Clinical',
-        'values' : [
-          { 'actual' : '', 'displayed' : 'Not affected' },
-          { 'actual' : 'carrier', 'displayed' : 'Carrier' },
-          { 'actual' : 'affected', 'displayed' : 'Affected' },
-          { 'actual' : 'presymptomatic', 'displayed' : 'Pre-symptomatic' }
+        'values': [
+          { 'actual': '', 'displayed': 'Not affected' },
+          { 'actual': 'carrier', 'displayed': 'Carrier' },
+          { 'actual': 'affected', 'displayed': 'Affected' },
+          { 'actual': 'presymptomatic', 'displayed': 'Pre-symptomatic' }
         ],
-        'default' : '',
-        'function' : 'setCarrierStatus'
+        'default': '',
+        'function': 'setCarrierStatus'
       },
       {
-        'name' : 'evaluated',
-        'label' : 'Documented evaluation',
-        'type' : 'checkbox',
+        'name': 'evaluated',
+        'label': 'Documented evaluation',
+        'type': 'checkbox',
         'tab': 'Clinical',
-        'function' : 'setEvaluated'
+        'function': 'setEvaluated'
       },
       {
-        'name' : 'disorders',
-        'label' : 'Disorders',
-        'type' : 'disease-picker',
+        'name': 'disorders',
+        'label': 'Disorders',
+        'type': 'disease-picker',
         'tab': 'Clinical',
-        'function' : 'setDisorders'
+        'function': 'setDisorders'
       },
       {
-        'name' : 'candidate_genes',
-        'label' : 'Genes',
-        'type' : 'gene-picker',
+        'name': 'candidate_genes',
+        'label': 'Genes',
+        'type': 'gene-picker',
         'tab': 'Clinical',
-        'function' : 'setGenes'
+        'function': 'setGenes'
       },
       {
-        'name' : 'hpo_positive',
-        'label' : 'Phenotypic features',
-        'type' : 'hpo-picker',
+        'name': 'hpo_positive',
+        'label': 'Phenotypic features',
+        'type': 'hpo-picker',
         'tab': 'Clinical',
-        'function' : 'setHPO'
+        'function': 'setHPO'
       },
       {
-        'name' : 'date_of_birth',
-        'label' : 'Date of birth',
-        'type' : 'date-picker',
+        'name': 'date_of_birth',
+        'label': 'Date of birth',
+        'type': 'date-picker',
         'tab': 'Personal',
-        'format' : 'dd/MM/yyyy',
-        'function' : 'setBirthDate'
+        'format': 'dd/MM/yyyy',
+        'function': 'setBirthDate'
       },
       {
-        'name' : 'date_of_death',
-        'label' : 'Date of death',
-        'type' : 'date-picker',
+        'name': 'date_of_death',
+        'label': 'Date of death',
+        'type': 'date-picker',
         'tab': 'Personal',
-        'format' : 'dd/MM/yyyy',
-        'function' : 'setDeathDate'
+        'format': 'dd/MM/yyyy',
+        'function': 'setDeathDate'
       },
       {
-        'name' : 'state',
-        'label' : 'Individual is',
-        'type' : 'radio',
+        'name': 'state',
+        'label': 'Individual is',
+        'type': 'radio',
         'tab': 'Personal',
         'columns': 3,
-        'values' : [
-          { 'actual' : 'alive', 'displayed' : 'Alive' },
-          { 'actual' : 'stillborn', 'displayed' : 'Stillborn' },
-          { 'actual' : 'deceased', 'displayed' : 'Deceased' },
-          { 'actual' : 'miscarriage', 'displayed' : 'Miscarriage' },
-          { 'actual' : 'unborn', 'displayed' : 'Unborn' },
-          { 'actual' : 'aborted', 'displayed' : 'Aborted' }
+        'values': [
+          { 'actual': 'alive', 'displayed': 'Alive' },
+          { 'actual': 'stillborn', 'displayed': 'Stillborn' },
+          { 'actual': 'deceased', 'displayed': 'Deceased' },
+          { 'actual': 'miscarriage', 'displayed': 'Miscarriage' },
+          { 'actual': 'unborn', 'displayed': 'Unborn' },
+          { 'actual': 'aborted', 'displayed': 'Aborted' }
         ],
-        'default' : 'alive',
-        'function' : 'setLifeStatus'
+        'default': 'alive',
+        'function': 'setLifeStatus'
       },
       {
-        'name' : 'gestation_age',
-        'label' : 'Gestation age',
-        'type' : 'select',
+        'name': 'gestation_age',
+        'label': 'Gestation age',
+        'type': 'select',
         'tab': 'Personal',
-        'range' : {'start': 0, 'end': 50, 'item' : ['week', 'weeks']},
-        'nullValue' : true,
-        'function' : 'setGestationAge'
+        'range': { 'start': 0, 'end': 50, 'item': ['week', 'weeks'] },
+        'nullValue': true,
+        'function': 'setGestationAge'
       },
       {
-        'label' : 'Heredity options',
-        'name' : 'childlessSelect',
-        'values' : [{'actual': 'none', displayed: 'None'},{'actual': 'childless', displayed: 'Childless'},{'actual': 'infertile', displayed: 'Infertile'}],
-        'type' : 'select',
+        'label': 'Heredity options',
+        'name': 'childlessSelect',
+        'values': [{ 'actual': 'none', displayed: 'None' }, { 'actual': 'childless', displayed: 'Childless' }, { 'actual': 'infertile', displayed: 'Infertile' }],
+        'type': 'select',
         'tab': 'Personal',
-        'function' : 'setChildlessStatus'
+        'function': 'setChildlessStatus'
       },
       {
-        'name' : 'adopted',
-        'label' : 'Adopted',
-        'type' : 'checkbox',
+        'name': 'adopted',
+        'label': 'Adopted',
+        'type': 'checkbox',
         'tab': 'Personal',
-        'function' : 'setAdopted'
+        'function': 'setAdopted'
       },
       {
-        'name' : 'monozygotic',
-        'label' : 'Monozygotic twin',
-        'type' : 'checkbox',
+        'name': 'monozygotic',
+        'label': 'Monozygotic twin',
+        'type': 'checkbox',
         'tab': 'Personal',
-        'function' : 'setMonozygotic'
+        'function': 'setMonozygotic'
       },
       {
-        'name' : 'nocontact',
-        'label' : 'Not in contact with proband',
-        'type' : 'checkbox',
+        'name': 'nocontact',
+        'label': 'Not in contact with proband',
+        'type': 'checkbox',
         'tab': 'Personal',
-        'function' : 'setLostContact'
+        'function': 'setLostContact'
       },
       {
-        'name' : 'placeholder',
-        'label' : 'Placeholder node',
-        'type' : 'checkbox',
+        'name': 'placeholder',
+        'label': 'Placeholder node',
+        'type': 'checkbox',
         'tab': 'Personal',
-        'function' : 'makePlaceholder'
+        'function': 'makePlaceholder'
       },
       {
-        'name' : 'comments',
-        'label' : 'Comments',
-        'type' : 'textarea',
+        'name': 'comments',
+        'label': 'Comments',
+        'type': 'textarea',
         'tab': 'Clinical',
-        'rows' : 2,
-        'function' : 'setComments'
+        'rows': 2,
+        'function': 'setComments'
       }
     ], ['Personal', 'Clinical']);
   },
@@ -499,7 +499,7 @@ var PedigreeEditor = Class.create({
      * @method getNodeMenu
      * @return {NodeMenu} Context menu for nodes
      */
-  getNodeMenu: function() {
+  getNodeMenu: function () {
     return this._nodeMenu;
   },
 
@@ -509,82 +509,82 @@ var PedigreeEditor = Class.create({
      * @method generateNodeGroupMenu
      * @return {NodeMenu}
      */
-  generateNodeGroupMenu: function() {
+  generateNodeGroupMenu: function () {
     if (this.isReadOnlyMode()) {
       return null;
     }
     var _this = this;
     return new NodeMenu([
       {
-        'name' : 'identifier',
-        'label' : '',
-        'type'  : 'hidden'
+        'name': 'identifier',
+        'label': '',
+        'type': 'hidden'
       },
       {
-        'name' : 'gender',
-        'label' : 'Gender',
-        'type' : 'radio',
+        'name': 'gender',
+        'label': 'Gender',
+        'type': 'radio',
         'columns': 3,
-        'values' : [
-          { 'actual' : 'M', 'displayed' : 'Male' },
-          { 'actual' : 'F', 'displayed' : 'Female' },
-          { 'actual' : 'U', 'displayed' : 'Unknown' }
+        'values': [
+          { 'actual': 'M', 'displayed': 'Male' },
+          { 'actual': 'F', 'displayed': 'Female' },
+          { 'actual': 'U', 'displayed': 'Unknown' }
         ],
-        'default' : 'U',
-        'function' : 'setGender'
+        'default': 'U',
+        'function': 'setGender'
       },
       {
-        'name' : 'numInGroup',
+        'name': 'numInGroup',
         'label': 'Number of persons in this group',
-        'type' : 'select',
-        'values' : [{'actual': 1, displayed: 'N'}, {'actual': 2, displayed: '2'}, {'actual': 3, displayed: '3'},
-          {'actual': 4, displayed: '4'}, {'actual': 5, displayed: '5'}, {'actual': 6, displayed: '6'},
-          {'actual': 7, displayed: '7'}, {'actual': 8, displayed: '8'}, {'actual': 9, displayed: '9'}],
-        'function' : 'setNumPersons'
+        'type': 'select',
+        'values': [{ 'actual': 1, displayed: 'N' }, { 'actual': 2, displayed: '2' }, { 'actual': 3, displayed: '3' },
+        { 'actual': 4, displayed: '4' }, { 'actual': 5, displayed: '5' }, { 'actual': 6, displayed: '6' },
+        { 'actual': 7, displayed: '7' }, { 'actual': 8, displayed: '8' }, { 'actual': 9, displayed: '9' }],
+        'function': 'setNumPersons'
       },
       {
-        'name' : 'external_ids',
+        'name': 'external_ids',
         'label': 'Identifier(s)',
-        'type' : 'text',
-        'function' : 'setExternalID'
+        'type': 'text',
+        'function': 'setExternalID'
       },
       {
-        'name' : 'disorders',
-        'label' : 'Known disorders<br>(common to all individuals in the group)',
-        'type' : 'disease-picker',
-        'function' : 'setDisorders'
+        'name': 'disorders',
+        'label': 'Known disorders<br>(common to all individuals in the group)',
+        'type': 'disease-picker',
+        'function': 'setDisorders'
       },
       {
-        'name' : 'comments',
-        'label' : 'Comments',
-        'type' : 'textarea',
-        'rows' : 2,
-        'function' : 'setComments'
+        'name': 'comments',
+        'label': 'Comments',
+        'type': 'textarea',
+        'rows': 2,
+        'function': 'setComments'
       },
       {
-        'name' : 'state',
-        'label' : 'All individuals in the group are',
-        'type' : 'radio',
-        'values' : [
-          { 'actual' : 'alive', 'displayed' : 'Alive' },
-          { 'actual' : 'aborted', 'displayed' : 'Aborted' },
-          { 'actual' : 'deceased', 'displayed' : 'Deceased' },
-          { 'actual' : 'miscarriage', 'displayed' : 'Miscarriage' }
+        'name': 'state',
+        'label': 'All individuals in the group are',
+        'type': 'radio',
+        'values': [
+          { 'actual': 'alive', 'displayed': 'Alive' },
+          { 'actual': 'aborted', 'displayed': 'Aborted' },
+          { 'actual': 'deceased', 'displayed': 'Deceased' },
+          { 'actual': 'miscarriage', 'displayed': 'Miscarriage' }
         ],
-        'default' : 'alive',
-        'function' : 'setLifeStatus'
+        'default': 'alive',
+        'function': 'setLifeStatus'
       },
       {
-        'name' : 'evaluatedGrp',
-        'label' : 'Documented evaluation',
-        'type' : 'checkbox',
-        'function' : 'setEvaluated'
+        'name': 'evaluatedGrp',
+        'label': 'Documented evaluation',
+        'type': 'checkbox',
+        'function': 'setEvaluated'
       },
       {
-        'name' : 'adopted',
-        'label' : 'Adopted',
-        'type' : 'checkbox',
-        'function' : 'setAdopted'
+        'name': 'adopted',
+        'label': 'Adopted',
+        'type': 'checkbox',
+        'function': 'setAdopted'
       }
     ], []);
   },
@@ -593,7 +593,7 @@ var PedigreeEditor = Class.create({
      * @method getNodeGroupMenu
      * @return {NodeMenu} Context menu for nodes
      */
-  getNodeGroupMenu: function() {
+  getNodeGroupMenu: function () {
     return this._nodeGroupMenu;
   },
 
@@ -603,36 +603,36 @@ var PedigreeEditor = Class.create({
      * @method generatePartnershipMenu
      * @return {NodeMenu}
      */
-  generatePartnershipMenu: function() {
+  generatePartnershipMenu: function () {
     if (this.isReadOnlyMode()) {
       return null;
     }
     var _this = this;
     return new NodeMenu([
       {
-        'label' : 'Heredity options',
-        'name' : 'childlessSelect',
-        'values' : [{'actual': 'none', displayed: 'None'},{'actual': 'childless', displayed: 'Childless'},{'actual': 'infertile', displayed: 'Infertile'}],
-        'type' : 'select',
-        'function' : 'setChildlessStatus'
+        'label': 'Heredity options',
+        'name': 'childlessSelect',
+        'values': [{ 'actual': 'none', displayed: 'None' }, { 'actual': 'childless', displayed: 'Childless' }, { 'actual': 'infertile', displayed: 'Infertile' }],
+        'type': 'select',
+        'function': 'setChildlessStatus'
       },
       {
-        'name' : 'consangr',
-        'label' : 'Consanguinity of this relationship',
-        'type' : 'radio',
-        'values' : [
-          { 'actual' : 'A', 'displayed' : 'Automatic' },
-          { 'actual' : 'Y', 'displayed' : 'Yes' },
-          { 'actual' : 'N', 'displayed' : 'No' }
+        'name': 'consangr',
+        'label': 'Consanguinidad de esta relación',
+        'type': 'radio',
+        'values': [
+          { 'actual': 'A', 'displayed': 'Automática' },
+          { 'actual': 'Y', 'displayed': 'Sí' },
+          { 'actual': 'N', 'displayed': 'No' }
         ],
-        'default' : 'A',
-        'function' : 'setConsanguinity'
+        'default': 'A',
+        'function': 'setConsanguinity'
       },
       {
-        'name' : 'broken',
-        'label' : 'Separated',
-        'type' : 'checkbox',
-        'function' : 'setBrokenStatus'
+        'name': 'broken',
+        'label': 'Separada',
+        'type': 'checkbox',
+        'function': 'setBrokenStatus'
       }
     ], [], 'relationship-menu');
   },
@@ -641,7 +641,7 @@ var PedigreeEditor = Class.create({
      * @method getPartnershipMenu
      * @return {NodeMenu} The context menu for Partnership nodes
      */
-  getPartnershipMenu: function() {
+  getPartnershipMenu: function () {
     return this._partnershipMenu;
   },
 
@@ -649,10 +649,12 @@ var PedigreeEditor = Class.create({
      * @method convertGraphCoordToCanvasCoord
      * @return [x,y] coordinates on the canvas
      */
-  convertGraphCoordToCanvasCoord: function(x, y) {
+  convertGraphCoordToCanvasCoord: function (x, y) {
     var scale = PedigreeEditorParameters.attributes.layoutScale;
-    return { x: x * scale.xscale,
-      y: y * scale.yscale };
+    return {
+      x: x * scale.xscale,
+      y: y * scale.yscale
+    };
   }
 });
 
